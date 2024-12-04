@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { initialize, getMessages, postMessage } from "./service/contract.js";
+import { initialize, getMessages, postMessage } from "./service/contract.ts";
 
 const App = () => {
   const [messages, setMessages] = useState([]);
   const [content, setContent] = useState("");
-
-
+  const [accounts, setAccounts] = useState([]);
+  
   const connectWallet = async () => {
     try {
-      await initialize();
+      const acc = await initialize();
+
+      setAccounts(acc); // 只有当账户不同才更新状态
+
       fetchMessages();
     } catch (error) {
       console.error("Failed to connect wallet:", error);
@@ -33,13 +36,21 @@ const App = () => {
       console.error("Failed to post message:", error);
     }
   };
-  
-  connectWallet();
 
+  useEffect(() => {
+    connectWallet();
+  }, []);
 
   return (
     <div>
-      <button onClick={connectWallet}>Connect Wallet</button>
+      {accounts.length > 0 ? (
+        accounts[0]
+      ) : (
+        <button onClick={connectWallet} color="black">
+          Connect Wallet
+        </button>
+      )}
+
       <div>
         <h2>Messages</h2>
         <ul>

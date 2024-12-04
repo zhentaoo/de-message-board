@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import MessageBoardABI from "../abi/MessageBoard.json";
 
-const contractAddress = process.env.REACT_APP_CONTRACT_ADDRESS;
+const contractAddress = import.meta.env.VITE_CONTRACT_ADDRESS
 
 let provider;
 let signer;
@@ -12,20 +12,21 @@ export const initialize = async () => {
   if (!window.ethereum) {
     throw new Error("MetaMask is not installed");
   }
-  if (!provider) {
-    provider = new ethers.providers.Web3Provider(window.ethereum);
-    debugger
-    const accounts = await provider.listAccounts();
-    
-    if (accounts.length === 0) {
-      // 如果没有连接，则请求连接
-      await provider.send("eth_requestAccounts", []);
-    }
+  provider = new ethers.providers.Web3Provider(window.ethereum);
 
-    signer = provider.getSigner();
+  const accounts = await provider.listAccounts();
 
-    contract = new ethers.Contract(contractAddress, MessageBoardABI, signer);
+  if (accounts.length === 0) {
+    // 如果没有连接，则请求连接
+    await provider.send("eth_requestAccounts", []);
   }
+  console.log('innintaalls');
+  
+
+  signer = provider.getSigner();
+
+  contract = new ethers.Contract(contractAddress, MessageBoardABI, signer);
+  return accounts;
 };
 
 // 获取链上留言

@@ -1,11 +1,11 @@
 import { ethers } from "ethers";
 import MessageBoardABI from "../abi/MessageBoard.json";
 
-const contractAddress = process.env.REACT_APP_CONTRACT_ADDRESS;
+const contractAddress = import.meta.env.VITE_CONTRACT_ADDRESS;
 
 // 通过这种方式
 const provider = new ethers.providers.JsonRpcProvider(
-  process.env.REACT_APP_ALCHEMY_URL
+  import.meta.env.VITE_ALCHEMY_URL
 );
 const contract = new ethers.Contract(
   contractAddress,
@@ -24,7 +24,7 @@ export const getMessages = async () => {
 };
 
 export const postMessage = async (content) => {
-  const privateKey = process.env.REACT_APP_PRIVATE_KEY; // 为测试私钥
+  const privateKey = import.meta.env.VITE_PRIVATE_KEY; // 为测试私钥
   console.log("privateKey:", privateKey);
 
   const wallet = new ethers.Wallet(privateKey, provider);
