@@ -2,7 +2,7 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
-      spacing: Array.from({ length: 500 }).reduce(
+      spacing: Array.from({ length: 800 }).reduce(
         (map, _, index) => {
           map[index] = `${index}px`;
           return map;

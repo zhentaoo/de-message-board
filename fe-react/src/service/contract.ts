@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import MessageBoardABI from "../abi/MessageBoard.json";
 
-const contractAddress = import.meta.env.VITE_CONTRACT_ADDRESS
+const contractAddress = import.meta.env.VITE_CONTRACT_ADDRESS;
 
 let provider;
 let signer;
@@ -14,14 +14,15 @@ export const initialize = async () => {
   }
   provider = new ethers.providers.Web3Provider(window.ethereum);
 
-  const accounts = await provider.listAccounts();
+  let accounts = await provider.listAccounts();
 
   if (accounts.length === 0) {
-    // 如果没有连接，则请求连接
+    // 如果之前没有连接，则请求连接
     await provider.send("eth_requestAccounts", []);
+
+    accounts = await provider.listAccounts();
   }
-  console.log('innintaalls');
-  
+  console.log("innintaalls");
 
   signer = provider.getSigner();
 
