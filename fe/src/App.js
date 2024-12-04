@@ -1,51 +1,67 @@
-import React, { useState, useEffect } from "react";
-import { getMessages, postMessage } from "./service/contract.js";
+import React, { useEffect, useState } from "react";
+import { initialize, getMessages, postMessage } from "./service/contract.js";
 
-function App() {
+const App = () => {
   const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState("");
+  const [content, setContent] = useState("");
 
-  useEffect(() => {
-    const fetchMessages = async () => {
-      const msgs = await getMessages();
-      setMessages(msgs);
-    };
-    fetchMessages();
-  }, []);
 
-  const handlePostMessage = async () => {
-    if (!newMessage) return;
-    await postMessage(newMessage);
-    setNewMessage("");
-    const msgs = await getMessages();
-    setMessages(msgs);
+  const connectWallet = async () => {
+    try {
+      await initialize();
+      fetchMessages();
+    } catch (error) {
+      console.error("Failed to connect wallet:", error);
+    }
   };
 
+  const fetchMessages = async () => {
+    try {
+      const msgs = await getMessages();
+      setMessages(msgs);
+    } catch (error) {
+      console.error("Failed to fetch messages:", error);
+    }
+  };
+
+  const handlePostMessage = async () => {
+    try {
+      await postMessage(content);
+      fetchMessages(); // 更新列表
+      setContent(""); // 清空输入框
+    } catch (error) {
+      console.error("Failed to post message:", error);
+    }
+  };
+  
+  connectWallet();
+
+
   return (
-    <div className="App">
-      <h1>Decentralized Message Board</h1>
+    <div>
+      <button onClick={connectWallet}>Connect Wallet</button>
       <div>
-        <input
-          type="text"
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
+        <h2>Messages</h2>
+        <ul>
+          {messages.map((msg, index) => (
+            <li key={index}>
+              <p>Sender: {msg.sender}</p>
+              <p>Content: {msg.content}</p>
+              <p>Timestamp: {msg.timestamp.toString()}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div>
+        <textarea
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
           placeholder="Write a message"
         />
         <button onClick={handlePostMessage}>Post Message</button>
       </div>
-      <div>
-        <h2>Messages</h2>
-        {messages.map((msg, index) => (
-          <div key={index}>
-            <p>
-              <strong>{msg.sender}</strong>: {msg.content}
-            </p>
-            <small>{msg.timestamp.toString()}</small>
-          </div>
-        ))}
-      </div>
     </div>
   );
-}
+};
 
 export default App;
