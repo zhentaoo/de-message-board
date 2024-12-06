@@ -12,6 +12,7 @@ export const initialize = async () => {
   if (!window.ethereum) {
     throw new Error("MetaMask is not installed");
   }
+
   provider = new ethers.providers.Web3Provider(window.ethereum);
 
   let accounts = await provider.listAccounts();
