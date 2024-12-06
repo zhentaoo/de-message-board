@@ -31,27 +31,24 @@ export const initialize = async () => {
   return accounts;
 };
 
-// 获取链上留言
-export const getMessages = async () => {
-  if (!contract) {
-    throw new Error("Contract is not initialized. Call initialize() first.");
+export const mint = async (to: string, amount: string) => {
+  try {
+    const tx = await contract.mint(to, ethers.utils.parseEther(amount));
+    await tx.wait();
+    return tx;
+  } catch (error) {
+    console.error("Error during transfer:", error);
   }
-
-  const messages = await contract.getMessages();
-
-  return messages.map((msg) => ({
-    sender: msg.sender,
-    content: msg.content,
-    timestamp: new Date(msg.timestamp.toNumber() * 1000),
-  }));
 };
 
-// 发布留言
-export const postMessage = async (content) => {
-  if (!contract) {
-    throw new Error("Contract is not initialized. Call initialize() first.");
+export const airdrop = async (amount: string) => {
+  try {
+    const tx = await contract.deposit({
+      value: ethers.utils.parseEther(amount),
+    });
+    await tx.wait();
+    return tx;
+  } catch (error) {
+    console.error("Error during deposit:", error);
   }
-
-  const tx = await contract.postMessage(content);
-  await tx.wait();
 };
