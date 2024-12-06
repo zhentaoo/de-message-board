@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
-import MessageBoardABI from "../abi/MessageBoard.json";
+import MintABI from "../abi/Mint.json";
 
-const contractAddress = '0xE9A70C9e3502a98a47d37Bb8E90751AB12ece8e7';
+const contractAddress = '0x62dA2ff1A66d83b26cb1EA87fCf1028FFA4B221D';
 
 let provider;
 let signer;
@@ -27,7 +27,7 @@ export const initialize = async () => {
 
   signer = provider.getSigner();
 
-  contract = new ethers.Contract(contractAddress, MessageBoardABI, signer);
+  contract = new ethers.Contract(contractAddress, MintABI, signer);
   return accounts;
 };
 

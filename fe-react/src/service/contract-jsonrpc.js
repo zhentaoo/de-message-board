@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import MessageBoardABI from "../abi/MessageBoard.json";
 
-const contractAddress = import.meta.env.VITE_CONTRACT_ADDRESS;
+const contractAddress = '0xE9A70C9e3502a98a47d37Bb8E90751AB12ece8e7';
 
 // 通过这种方式
 const provider = new ethers.providers.JsonRpcProvider(
